@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KlaiBaan — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--accent:#FE9F60;--accent-dark:#E8793B;--cream:#FFF7ED;--ink:#3A2A22;--muted:#B49A86;--line:#F3E2CF;--chip:#FFE9D6;--chiptext:#C4622E;--brown:#8A6A52;--avatar:#E9DED3}
+  *{box-sizing:border-box;font-family:'Nunito','Noto Sans Thai',sans-serif}
+  html,body{margin:0;height:100%}
+  body{background:var(--cream);color:var(--ink)}
+  button{cursor:pointer;font:inherit;color:inherit;background:none;border:0;padding:0;text-align:inherit}
+  svg{display:block;flex:none}
+
+  .phone{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative;background:var(--cream);margin:0 auto;max-width:430px}
+  @media (min-width:520px){
+    body{background:#F3E2CF;display:flex;align-items:center;justify-content:center}
+    .phone{width:390px;height:min(844px,100dvh);border-radius:28px;box-shadow:0 20px 60px rgba(120,70,30,.25)}
+  }
+
+  .hdr{flex:none;padding:22px 20px 14px;display:flex;align-items:center;gap:10px}
+  .hdr.between{justify-content:space-between}
+  .logo{font-size:24px;font-weight:800;color:var(--accent);letter-spacing:-.3px}
+  .title{font-size:17px;font-weight:800}
+  .iconbtn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .iconbtn.ring{border:1.5px solid #FFE3C7;background:#fff;width:36px;height:36px}
+  .pad{flex:none;padding:0 20px 14px}
+  .scroll{flex:1;min-height:0;overflow-y:auto;padding:0 20px 20px}
+
+  .searchbar{width:100%;height:46px;background:#fff;border:1.5px solid #FFE3C7;border-radius:23px;display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--muted);font-size:14px}
+  .searchbar.active{border-color:var(--accent);flex:1;width:auto}
+  .searchbar input{flex:1;border:0;outline:0;background:transparent;font-size:14px;color:var(--ink);min-width:0}
+  .link{flex:none;color:var(--accent-dark);font-weight:700;font-size:13.5px;padding:4px 2px}
+
+  .chips{flex:none;display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;border-radius:16px;padding:7px 16px;font-size:12.5px;font-weight:600;background:#fff;color:var(--brown);border:1.5px solid #FFE3C7}
+  .chip.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+
+  .feed{display:flex;flex-direction:column;gap:14px}
+  .card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(180,110,60,.08)}
+  .who{display:flex;align-items:center;gap:10px}
+  .who .nm{font-size:14px;font-weight:700}
+  .who small{display:block;font-size:11.5px;color:var(--muted)}
+  .who .grow{flex:1;min-width:0}
+  .av{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
+  .av.anon{background:var(--avatar);color:#9C8478}
+  .av.sm{width:34px;height:34px;font-size:13px}
+  .flag{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#C9B6A6}
+  .tag{display:inline-block;margin:10px 0;background:var(--chip);color:var(--chiptext);font-size:11px;font-weight:700;border-radius:10px;padding:3px 10px}
+  .txt{display:block;font-size:14px;line-height:1.55;color:#4A3A30;margin:0 0 14px;cursor:pointer}
+  .row{display:flex;align-items:center;gap:10px}
+  .react{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:16px;padding:6px 14px;background:#fff;color:var(--accent-dark);border:1.5px solid var(--accent)}
+  .react.on{background:var(--accent);color:#fff}
+  .cmt{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:13px;font-weight:600}
+  .edited{color:var(--muted)}
+  .empty{text-align:center;color:var(--muted);font-size:14px;margin:28px 12px;line-height:1.6}
+
+  .nav{flex:none;height:68px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-evenly}
+  .nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;color:#B9A392;font-size:10.5px;font-weight:600}
+  .nav button.on{color:var(--accent);font-weight:700}
+
+  /* compose */
+  .lbl{font-size:12px;font-weight:700;color:#B9754A;margin:18px 0 8px}
+  .wrap{display:flex;flex-wrap:wrap;gap:8px}
+  .compose{display:flex;flex-direction:column}
+  textarea{flex:1;min-height:150px;margin-top:18px;border:0;outline:0;background:transparent;font-size:15px;line-height:1.6;color:var(--ink);resize:none}
+  textarea::placeholder{color:#C9B6A6}
+  .tools{display:flex;gap:10px;padding:10px 0 16px;border-top:1px solid var(--line)}
+  .anonrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}
+  .anonrow b{font-size:13.5px;display:block}
+  .anonrow small{font-size:11px;color:var(--muted)}
+  .sw{width:46px;height:26px;border-radius:13px;background:#E3D5C7;position:relative;transition:background .15s;flex:none}
+  .sw.on{background:var(--accent)}
+  .sw i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .sw.on i{left:23px}
+  .foot{flex:none;padding:6px 20px 24px}
+  .hint{text-align:center;font-size:11.5px;font-style:italic;color:#B9754A;margin:0 0 10px}
+  .primary{width:100%;height:48px;border-radius:24px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;text-align:center}
+  .primary:disabled{opacity:.45;cursor:not-allowed}
+
+  /* comments */
+  .sec{font-size:12.5px;font-weight:700;color:#B9754A;margin:18px 0 10px}
+  .cm{display:flex;gap:10px;margin-bottom:14px}
+  .bub{flex:1;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 2px 8px rgba(180,110,60,.06)}
+  .bub .top{display:flex;align-items:center;justify-content:space-between}
+  .bub b{font-size:12.5px}
+  .bub p{margin:4px 0 0;font-size:13px;line-height:1.5;color:#4A3A30}
+  .composer{flex:none;padding:10px 20px 14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;background:var(--cream)}
+  .composer .box{flex:1;height:42px;background:#fff;border:1.5px solid #FFE3C7;border-radius:21px;display:flex;align-items:center;padding:0 16px}
+  .composer input{flex:1;border:0;outline:0;background:transparent;font-size:13.5px;color:var(--ink);min-width:0}
+  .send{width:42px;height:42px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+
+  /* profile */
+  .pcard{background:#fff;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(180,110,60,.08);display:flex;flex-direction:column;align-items:center;text-align:center}
+  .big{width:68px;height:68px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center}
+  .stats{display:flex;gap:10px;margin-top:18px;width:100%}
+  .stat{flex:1;background:var(--cream);border-radius:12px;padding:10px 0}
+  .stat b{display:block;font-size:18px;font-weight:800;color:var(--accent)}
+  .stat span{font-size:10.5px;color:var(--brown);font-weight:600}
+  .hist{width:100%;background:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(180,110,60,.06);margin-bottom:10px}
+  .hist .mid{flex:1;min-width:0}
+  .hist .tag{margin:0;font-size:10px;padding:2px 8px;border-radius:8px}
+  .hist p{margin:6px 0 0;font-size:12.5px;color:#4A3A30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hist small{display:block;margin-top:4px;font-size:10.5px;color:var(--muted)}
+  .hid{color:#C4622E;font-weight:700}
+  .reset{display:block;margin:18px auto 4px;font-size:12px;color:var(--muted);text-decoration:underline}
+
+  /* search */
+  .trend{width:100%;display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)}
+  .rank{width:22px;height:22px;border-radius:50%;background:var(--chip);color:var(--accent-dark);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .rank.first{background:var(--accent);color:#fff}
+  .trend span.t{flex:1;font-size:14px;font-weight:600}
+  .trend small{font-size:11px;color:var(--muted)}
+  .sub{display:flex;align-items:center;gap:6px;margin-bottom:12px;color:#B9754A;font-size:12.5px;font-weight:700}
+  .res{width:100%;display:block;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(180,110,60,.06)}
+  .res .tag{margin:0 0 6px;font-size:10px;padding:2px 8px;border-radius:8px}
+  .res p{margin:0;font-size:13px;line-height:1.5;color:#4A3A30}
+  .res small{display:block;margin-top:6px;font-size:10.5px;color:var(--muted)}
+
+  .toast{position:absolute;left:50%;bottom:90px;transform:translate(-50%,10px);background:rgba(58,42,34,.92);color:#fff;font-size:12.5px;padding:9px 16px;border-radius:18px;opacity:0;pointer-events:none;transition:all .2s;white-space:nowrap;z-index:9}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- ข้อมูล ----------
+  var CATS = ['คิดถึงอาหารบ้าน', 'ปรับตัวยาก', 'คิดถึงสัตว์เลี้ยง', 'คิดถึงครอบครัว'];
+  var TRENDING_TERMS = ['ปรับตัวยาก', 'คิดถึงอาหารบ้าน', 'คิดถึงครอบครัว', 'คิดถึงสัตว์เลี้ยง', 'แม่'];
+  var HIDE_AT = 3; // FR-5: ถูกรายงานครบกี่ครั้งถึงซ่อน
+  var ME = { uid: 'me', name: 'คุณผู้ใช้' };
+  var KEY = 'klaibaan-proto-v1';
+  var MIN = 60000, HR = 3600000, DAY = 86400000;
+
+  function seed() {
+    var n = Date.now();
+    return {
+      liked: {},
+      posts: [
+        { id: 'p1', uid: 's1', name: 'ผู้ใช้ไม่ระบุตัวตน', anon: true, cat: 'คิดถึงอาหารบ้าน', text: 'คืนนี้คิดถึงข้าวที่แม่ทำมากเลย ที่นี่หากินแบบนั้นไม่ได้เลยสักร้าน', at: n - 2 * HR, react: 24, report: 0, edited: false },
+        { id: 'p2', uid: 's2', name: 'น้องใบไม้', anon: false, cat: 'ปรับตัวยาก', text: 'เดือนแรกที่ต่างจังหวัด ยังไม่มีเพื่อนสนิทเลย บางวันก็รู้สึกเหนื่อยกับการปรับตัวเนอะ', at: n - 5 * HR, react: 12, report: 0, edited: false },
+        { id: 'p3', uid: 's3', name: 'ผู้ใช้ไม่ระบุตัวตน', anon: true, cat: 'คิดถึงสัตว์เลี้ยง', text: 'ไม่รู้ว่าน้องหมาที่บ้านจะจำเราได้ไหมนะ ตอนกลับไปครั้งหน้า', at: n - DAY, react: 8, report: 0, edited: false },
+        { id: 'p4', uid: 's4', name: 'ต้นไม้ใหญ่', anon: false, cat: 'คิดถึงครอบครัว', text: 'โทรหาแม่ทุกวันแต่ก็ยังคิดถึงอยู่ดี ใครเป็นเหมือนกันบ้าง', at: n - 2 * DAY, react: 31, report: 0, edited: false }
+      ],
+      comments: {
+        p1: [
+          { id: 'c1', uid: 's2', name: 'ดาวเหนือ', text: 'เราก็เป็นเหมือนกันเลย โดยเฉพาะตอนกลางคืน', at: n - 90 * MIN },
+          { id: 'c2', uid: 's4', name: 'ต้นไม้ใหญ่', text: 'อยากกลับบ้านไปกินข้าวกับที่บ้านเหมือนกันเลยตอนนี้', at: n - 60 * MIN }
+        ],
+        p2: [{ id: 'c3', uid: 's1', name: 'ดาวเหนือ', text: 'สู้ๆนะ เดี๋ยวก็จะมีเพื่อนเอง', at: n - 3 * HR }]
+      }
+    };
+  }
+
+  function load() {
+    try { var r = localStorage.getItem(KEY); if (r) return JSON.parse(r); } catch (e) {}
+    return seed();
+  }
+  var S = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  // ---------- ตัวช่วย ----------
+  var app = document.getElementById('app');
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function ago(t) {
+    var m = Math.floor((Date.now() - t) / 60000);
+    if (m < 1) return 'เมื่อสักครู่';
+    if (m < 60) return m + ' นาทีที่แล้ว';
+    var h = Math.floor(m / 60);
+    if (h < 24) return h + ' ชม.ที่แล้ว';
+    return Math.floor(h / 24) + ' วันที่แล้ว';
+  }
+  function findPost(id) { return S.posts.filter(function (p) { return p.id === id; })[0]; }
+  function visible() { return S.posts.filter(function (p) { return p.report < HIDE_AT; }).sort(function (a, b) { return b.at - a.at; }); }
+  function ncm(id) { return (S.comments[id] || []).length; }
+
+  function ic(inner, o) {
+    o = o || {};
+    return '<svg width="' + (o.s || 18) + '" height="' + (o.s || 18) + '" viewBox="0 0 24 24" fill="' + (o.fill || 'none') + '" stroke="' + (o.stroke || 'currentColor') + '" stroke-width="' + (o.w || 2) + '" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
+  }
+  var P = {
+    search: '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+    heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+    comment: '<path d="M21 11.5a8.4 8.4 0 0 1-1.1 4.2L21 20l-4.3-1.1a8.5 8.5 0 1 1 4.3-7.4z"/>',
+    flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="2"/>',
+    user: '<path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/><rect x="7" y="3" width="10" height="9" rx="4.5"/>',
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/>',
+    plus: '<rect x="3" y="3" width="18" height="18" rx="5"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>',
+    x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    back: '<polyline points="15 18 9 12 15 6"/>',
+    next: '<polyline points="9 18 15 12 9 6"/>',
+    send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+    trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+    camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+    pin: '<path d="M20.4 10.5c0 6-8.4 10.5-8.4 10.5S3.6 16.5 3.6 10.5a8.4 8.4 0 1 1 16.8 0z"/><circle cx="12" cy="10.5" r="3"/>',
+    trend: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/>'
+  };
+
+  function nav(active) {
+    function b(key, go, label, icon) {
+      var on = active === key;
+      return '<button class="' + (on ? 'on' : '') + '" data-go="' + go + '" aria-label="' + label + '">' + ic(icon, { s: 22, fill: on && key !== 'new' ? 'currentColor' : 'none' }) + '<span>' + label + '</span></button>';
+    }
+    return '<div class="nav">' + b('home', '/', 'หน้าแรก', P.home) + b('new', '/new', 'โพสต์', P.plus) + b('profile', '/profile', 'โปรไฟล์', P.user) + '</div>';
+  }
+  function avatar(p, small) {
+    var c = small ? 'av sm' : 'av';
+    return p.anon ? '<div class="' + c + ' anon">' + ic(P.user, { s: small ? 15 : 18 }) + '</div>' : '<div class="' + c + '">' + esc(p.name.slice(0, 1)) + '</div>';
+  }
+  function reactBtn(p) {
+    var on = !!S.liked[p.id];
+    return '<button class="react ' + (on ? 'on' : '') + '" data-act="like" data-id="' + p.id + '">' + ic(P.heart, { s: 15, fill: on ? '#fff' : 'none' }) + '<span>เข้าใจ ' + p.react + '</span></button>';
+  }
+
+  // ---------- หน้าจอ ----------
+  var homeCat = null;
+  function card(p) {
+    return '<div class="card">' +
+      '<div class="who">' + avatar(p) + '<div class="grow"><div class="nm">' + esc(p.name) + '</div><small>' + ago(p.at) + (p.edited ? ' <span class="edited">· แก้ไขแล้ว</span>' : '') + '</small></div>' +
+      '<button class="flag" data-act="report" data-id="' + p.id + '" aria-label="รายงานโพสต์นี้">' + ic(P.flag, { s: 15 }) + '</button></div>' +
+      '<span class="tag">' + esc(p.cat) + '</span>' +
+      '<span class="txt" data-go="/post/' + p.id + '">' + esc(p.text) + '</span>' +
+      '<div class="row">' + reactBtn(p) + '<button class="cmt" data-go="/post/' + p.id + '" aria-label="ดูความคิดเห็น">' + ic(P.comment, { s: 16 }) + '<span>' + ncm(p.id) + '</span></button></div></div>';
+  }
+
+  function homeView() {
+    var list = visible().filter(function (p) { return homeCat ? p.cat === homeCat : true; });
+    var chips = '<button class="chip ' + (homeCat === null ? 'on' : '') + '" data-act="cat" data-v="">ทั้งหมด</button>' +
+      CATS.map(function (c) { return '<button class="chip ' + (homeCat === c ? 'on' : '') + '" data-act="cat" data-v="' + esc(c) + '">' + esc(c) + '</button>'; }).join('');
+    return '<div class="phone">' +
+      '<div class="hdr"><div class="logo">KlaiBaan</div></div>' +
+      '<div class="pad"><button class="searchbar" data-go="/search">' + ic(P.search, { stroke: '#C99A78' }) + '<span>ค้นหาโพสต์ เช่น ปรับตัวยาก</span></button></div>' +
+      '<div class="chips">' + chips + '</div>' +
+      '<div class="scroll feed">' + (list.length ? list.map(card).join('') : '<p class="empty">ยังไม่มีโพสต์ในหมวดนี้<br>ลองเป็นคนแรกที่แบ่งปันเรื่องราวดูสิ</p>') + '</div>' +
+      nav('home') + '</div>';
+  }
+
+  var draft = { cat: 0, text: '', anon: false };
+  function newView() {
+    var cats = CATS.map(function (c, i) { return '<button class="chip ' + (draft.cat === i ? 'on' : '') + '" data-act="pick" data-v="' + i + '">' + esc(c) + '</button>'; }).join('');
+    return '<div class="phone">' +
+      '<div class="hdr between"><button class="iconbtn" data-back aria-label="ปิด">' + ic(P.x, { stroke: '#8A6A52', w: 2.2 }) + '</button><div class="title">โพสต์ใหม่</div><div style="width:34px"></div></div>' +
+      '<div class="scroll compose">' +
+      '<div class="who"><div class="av">' + ic(P.user, { stroke: '#fff' }) + '</div><div><div class="nm">' + ME.name + '</div><small>โพสต์ถึงชุมชน KlaiBaan</small></div></div>' +
+      '<div class="lbl">เลือกหมวดหมู่ความรู้สึก</div><div class="wrap">' + cats + '</div>' +
+      '<textarea id="story" placeholder="มีเรื่องอะไรอยากแบ่งปันไหม? เล่าให้เราฟังได้นะ" aria-label="เรื่องราวของคุณ">' + esc(draft.text) + '</textarea>' +
+      '<div class="tools">' +
+      ['image', 'camera', 'pin'].map(function (k) { return '<button class="iconbtn ring" data-act="soon" aria-label="' + k + '">' + ic(P[k], { s: 16, stroke: '#B9754A' }) + '</button>'; }).join('') +
+      '</div>' +
+      '<div class="anonrow"><div><b>โพสต์แบบไม่ระบุตัวตน</b><small>ซ่อนชื่อและข้อมูลของคุณจากผู้อื่น</small></div>' +
+      '<button class="sw ' + (draft.anon ? 'on' : '') + '" role="switch" aria-checked="' + draft.anon + '" aria-label="โพสต์แบบไม่ระบุตัวตน" data-act="anon"><i></i></button></div>' +
+      '</div>' +
+      '<div class="foot"><p class="hint">แบ่งปันเรื่องราวของคุณให้คนที่เข้าใจได้รับรู้</p><button class="primary" data-act="submit" ' + (draft.text.trim() ? '' : 'disabled') + '>โพสต์</button></div></div>';
+  }
+
+  var cdraft = '';
+  function postView(id) {
+    var p = findPost(id);
+    if (!p) {
+      return '<div class="phone"><div class="hdr"><button class="iconbtn" data-back aria-label="กลับ">' + ic(P.back, { stroke: '#8A6A52', w: 2.2 }) + '</button><div class="title">ความคิดเห็น</div></div><p class="empty">ไม่พบโพสต์นี้</p>' + nav('') + '</div>';
+    }
+    var cs = (S.comments[id] || []).map(function (c) {
+      var mine = c.uid === ME.uid;
+      return '<div class="cm"><div class="av sm" style="background:' + (mine ? 'var(--accent)' : '#F4C9A0') + '">' + esc(c.name.slice(0, 1)) + '</div>' +
+        '<div class="bub"><div class="top"><b>' + esc(c.name) + '</b>' +
+        (mine ? '<button data-act="del" data-id="' + c.id + '" aria-label="ลบความคิดเห็นของคุณ" style="color:#C9B6A6">' + ic(P.trash, { s: 13 }) + '</button>' : '') +
+        '</div><p>' + esc(c.text) + '</p></div></div>';
+    }).join('');
+    return '<div class="phone">' +
+      '<div class="hdr"><button class="iconbtn" data-back aria-label="กลับ">' + ic(P.back, { stroke: '#8A6A52', w: 2.2 }) + '</button><div class="title">ความคิดเห็น</div></div>' +
+      '<div class="scroll">' +
+      '<div class="card"><div class="who">' + avatar(p, true) + '<div class="grow"><div class="nm" style="font-size:13.5px">' + esc(p.name) + '</div><small>' + ago(p.at) + '</small></div></div>' +
+      '<p class="txt" style="margin:10px 0;font-size:13.5px;cursor:default">' + esc(p.text) + '</p>' + reactBtn(p) + '</div>' +
+      '<div class="sec">ความคิดเห็น (' + ncm(id) + ')</div>' +
+      (cs || '<p class="empty" style="margin:10px 0">ยังไม่มีความคิดเห็น เป็นคนแรกที่ให้กำลังใจสิ</p>') +
+      '</div>' +
+      '<div class="composer"><div class="box"><input id="cinput" placeholder="เขียนความคิดเห็น..." aria-label="เขียนความคิดเห็น" value="' + esc(cdraft) + '"></div><button class="send" data-act="send" aria-label="ส่งความคิดเห็น">' + ic(P.send, { stroke: '#fff', w: 2.2 }) + '</button></div>' +
+      nav('') + '</div>';
+  }
+
+  function profileView() {
+    var mine = S.posts.filter(function (p) { return p.uid === ME.uid; }).sort(function (a, b) { return b.at - a.at; });
+    var reacts = mine.reduce(function (s, p) { return s + p.react; }, 0);
+    var cms = mine.reduce(function (s, p) { return s + ncm(p.id); }, 0);
+    var hist = mine.map(function (p) {
+      return '<button class="hist" data-go="/post/' + p.id + '"><div class="mid"><span class="tag">' + esc(p.cat) + '</span><p>' + esc(p.text) + '</p>' +
+        '<small>' + ago(p.at) + ' · เข้าใจ ' + p.react + ' · คอมเมนต์ ' + ncm(p.id) + (p.report >= HIDE_AT ? ' · <span class="hid">ถูกซ่อน (โดนรายงาน)</span>' : '') + '</small></div>' + ic(P.next, { s: 16, stroke: '#D9C4B2' }) + '</button>';
+    }).join('');
+    return '<div class="phone">' +
+      '<div class="hdr between"><div class="title" style="font-size:20px">โปรไฟล์</div><button class="iconbtn ring" data-act="soon" aria-label="ตั้งค่า">' + ic(P.gear, { s: 16, stroke: '#B9754A' }) + '</button></div>' +
+      '<div class="scroll">' +
+      '<div class="pcard"><div class="big">' + ic(P.user, { s: 30, stroke: '#fff' }) + '</div><div class="nm" style="font-size:16px;font-weight:800;margin-top:12px">' + ME.name + '</div><small style="color:var(--muted);font-size:11.5px;margin-top:3px">สมาชิก KlaiBaan</small>' +
+      '<div class="stats"><div class="stat"><b>' + mine.length + '</b><span>โพสต์</span></div><div class="stat"><b>' + reacts + '</b><span>ได้รับเข้าใจ</span></div><div class="stat"><b>' + cms + '</b><span>คอมเมนต์</span></div></div></div>' +
+      '<div class="sec" style="color:var(--ink);font-size:13px">ประวัติโพสต์</div>' +
+      (hist || '<p class="empty" style="margin:10px 0">คุณยังไม่มีโพสต์ ลองกดปุ่ม + เพื่อเริ่มโพสต์แรก</p>') +
+      '<button class="reset" data-act="reset">รีเซ็ตข้อมูลตัวอย่าง</button></div>' +
+      nav('profile') + '</div>';
+  }
+
+  var sv = '';
+  function count(term) { return visible().filter(function (p) { return match(p, term); }).length; }
+  function match(p, q) {
+    q = q.trim().toLowerCase();
+    if (!q) return true;
+    return (p.text + ' ' + p.cat + ' ' + (p.anon ? '' : p.name)).toLowerCase().indexOf(q) !== -1;
+  }
+  function searchBody() {
+    if (!sv.trim()) {
+      var ranked = TRENDING_TERMS.map(function (t) { return { t: t, n: count(t) }; }).sort(function (a, b) { return b.n - a.n; });
+      return '<div class="sub">' + ic(P.trend, { s: 15, stroke: '#B9754A' }) + '<span>คำค้นหาที่กำลังเป็นที่นิยม</span></div>' +
+        ranked.map(function (r, i) {
+          return '<button class="trend" data-act="trend" data-v="' + esc(r.t) + '"><span class="rank ' + (i === 0 ? 'first' : '') + '">' + (i + 1) + '</span><span class="t">' + esc(r.t) + '</span><small>' + r.n + ' โพสต์</small></button>';
+        }).join('');
+    }
+    var res = visible().filter(function (p) { return match(p, sv); });
+    if (!res.length) return '<p class="empty">ไม่พบโพสต์ที่ตรงกับ “' + esc(sv) + '”</p>';
+    return '<div class="sub"><span>พบ ' + res.length + ' โพสต์</span></div>' + res.map(function (p) {
+      return '<button class="res" data-go="/post/' + p.id + '"><span class="tag">' + esc(p.cat) + '</span><p>' + esc(p.text) + '</p><small>' + esc(p.name) + ' · เข้าใจ ' + p.react + ' · คอมเมนต์ ' + ncm(p.id) + '</small></button>';
+    }).join('');
+  }
+  function searchView() {
+    return '<div class="phone">' +
+      '<div class="hdr"><div class="searchbar active">' + ic(P.search, { stroke: '#FE9F60' }) + '<input id="q" type="search" placeholder="ค้นหาโพสต์ เช่น ปรับตัวยาก" aria-label="ค้นหาโพสต์" value="' + esc(sv) + '"></div><button class="link" data-back>ยกเลิก</button></div>' +
+      '<div class="scroll" id="results">' + searchBody() + '</div>' + nav('') + '</div>';
+  }
+
+  // ---------- router ----------
+  var lastName = null, pendingToast = null;
+  function parse() {
+    var p = (location.hash.slice(1) || '/').split('/').filter(Boolean);
+    if (p[0] === 'new') return { name: 'new', view: newView };
+    if (p[0] === 'post' && p[1]) return { name: 'post:' + p[1], view: function () { return postView(p[1]); } };
+    if (p[0] === 'profile') return { name: 'profile', view: profileView };
+    if (p[0] === 'search') return { name: 'search', view: searchView };
+    return { name: 'home', view: homeView };
+  }
+
+  function render(keep) {
+    var r = parse();
+    if (r.name !== lastName) {                 // เข้าหน้าใหม่ → เคลียร์ร่าง
+      if (r.name === 'new') draft = { cat: 0, text: '', anon: false };
+      if (r.name === 'search') sv = '';
+      if (r.name.indexOf('post:') === 0) cdraft = '';
+      lastName = r.name;
+      keep = false;
+    }
+    var old = app.querySelector('.scroll');
+    var top = keep && old ? old.scrollTop : 0;
+    app.innerHTML = r.view();
+    var sc = app.querySelector('.scroll');
+    if (sc) sc.scrollTop = top;
+    if (r.name === 'search') { var q = document.getElementById('q'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+    if (pendingToast) { toast(pendingToast); pendingToast = null; }
+  }
+
+  function toast(m) {
+    var ph = app.querySelector('.phone'); if (!ph) return;
+    var t = document.createElement('div'); t.className = 'toast'; t.textContent = m; ph.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('show'); });
+    setTimeout(function () { t.classList.remove('show'); setTimeout(function () { t.remove(); }, 250); }, 1800);
+  }
+  function go(path) { location.hash = '#' + path; }
+  function back() { if (history.length > 1) history.back(); else go('/'); }
+
+  // ---------- การกระทำ ----------
+  function act(a, d) {
+    var p;
+    if (a === 'cat') { homeCat = d.v || null; render(false); }
+    else if (a === 'like') {
+      p = findPost(d.id); if (!p) return;
+      var on = !!S.liked[p.id];
+      p.react = Math.max(0, p.react + (on ? -1 : 1)); S.liked[p.id] = !on; save(); render(true);
+    }
+    else if (a === 'report') {
+      p = findPost(d.id); if (!p) return;
+      if (!confirm('ยืนยันรายงานโพสต์นี้ว่าไม่เหมาะสม?')) return;
+      p.report += 1; save(); render(true);
+      toast(p.report >= HIDE_AT ? 'โพสต์นี้ถูกซ่อนเพื่อรอผู้ดูแลตรวจสอบ' : 'ส่งรายงานแล้ว (' + p.report + '/' + HIDE_AT + ')');
+    }
+    else if (a === 'pick') { draft.cat = +d.v; render(true); }
+    else if (a === 'anon') { draft.anon = !draft.anon; render(true); }
+    else if (a === 'submit') {
+      if (!draft.text.trim()) return;
+      S.posts.unshift({ id: 'p' + Date.now().toString(36), uid: ME.uid, name: draft.anon ? 'ผู้ใช้ไม่ระบุตัวตน' : ME.name, anon: draft.anon, cat: CATS[draft.cat], text: draft.text.trim(), at: Date.now(), react: 0, report: 0, edited: false });
+      save(); pendingToast = 'โพสต์เรียบร้อยแล้ว';
+      location.replace(location.pathname + location.search + '#/');
+    }
+    else if (a === 'send') {
+      var id = (parse().name.split(':')[1]); var t = cdraft.trim(); if (!id || !t) return;
+      (S.comments[id] = S.comments[id] || []).push({ id: 'c' + Date.now().toString(36), uid: ME.uid, name: 'คุณ', text: t, at: Date.now() });
+      cdraft = ''; save(); render(true);
+      var sc = app.querySelector('.scroll'); if (sc) sc.scrollTop = sc.scrollHeight;
+    }
+    else if (a === 'del') {
+      var pid = parse().name.split(':')[1];
+      S.comments[pid] = (S.comments[pid] || []).filter(function (c) { return c.id !== d.id; }); save(); render(true);
+    }
+    else if (a === 'trend') { sv = d.v; render(false); }
+    else if (a === 'reset') { if (confirm('คืนค่าข้อมูลตัวอย่างเริ่มต้น? (โพสต์ที่คุณสร้างไว้จะหายไป)')) { S = seed(); save(); render(false); } }
+    else if (a === 'soon') toast('ปุ่มนี้ยังไม่เปิดใช้ใน prototype');
+  }
+
+  app.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-go],[data-act],[data-back]');
+    if (!el) return;
+    if (el.hasAttribute('data-back')) return back();
+    if (el.dataset.go) return go(el.dataset.go);
+    act(el.dataset.act, el.dataset);
+  });
+  app.addEventListener('input', function (e) {
+    var id = e.target.id;
+    if (id === 'story') { draft.text = e.target.value; var b = app.querySelector('[data-act="submit"]'); if (b) b.disabled = !draft.text.trim(); }
+    else if (id === 'cinput') cdraft = e.target.value;
+    else if (id === 'q') { sv = e.target.value; document.getElementById('results').innerHTML = searchBody(); }
+  });
+  app.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.id === 'cinput') { e.preventDefault(); act('send', {}); }
+  });
+  window.addEventListener('hashchange', function () { render(false); });
+
+  render(false);
+})();
+</script>
+</body>
+</html>
