@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KlaiBaan — รายงานโพสต์ (FR-5)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif}
+html{background:#f5f4ef;color:#3A2A22}
+body{padding:40px 48px}
+.board{display:flex;gap:48px;align-items:flex-start;overflow-x:auto;padding-bottom:24px}
+.col{flex:none}
+.col h2{font-size:13px;font-weight:600;color:#6b6a68;margin-bottom:6px}
+.col .cov{display:inline-block;font-size:12px;font-weight:700;color:#C4622E;background:#FFE9D6;border-radius:10px;padding:3px 10px;margin-bottom:10px}
+.ph{width:390px;height:844px;background:#FFF7ED;position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.top{flex:none;display:flex;align-items:center;gap:10px;padding:22px 20px 14px}
+.top b{font-size:20px;font-weight:800}
+.ic{width:38px;height:38px;border-radius:50%;border:1.5px solid #FFE3C7;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ic svg,.mi svg{stroke:#B9754A;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.body{flex:1;min-height:0;overflow-y:auto;padding:0 20px 20px;display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(180,110,60,.08);position:relative}
+.who{display:flex;align-items:center;gap:10px}
+.av{width:40px;height:40px;border-radius:50%;background:#E9DED3;display:flex;align-items:center;justify-content:center;flex:none}
+.av svg{stroke:#9C8478;fill:none;stroke-width:2;stroke-linecap:round}
+.nm{font-weight:700;font-size:14px}.tm{font-size:12px;color:#B49A86}
+.tag{display:inline-block;background:#FFE9D6;color:#C4622E;font-size:12px;font-weight:700;border-radius:12px;padding:3px 10px;margin:12px 0 6px}
+.tx{font-size:14.5px;line-height:1.55;color:#4A3A30}
+.acts{display:flex;gap:10px;margin-top:12px}
+.pill{border:1.5px solid #FFE3C7;background:#fff;color:#8A6A52;border-radius:16px;padding:6px 14px;font-size:12.5px;font-weight:700}
+.btn{border:none;border-radius:24px;height:48px;font-size:15px;font-weight:800;cursor:pointer;width:100%}
+.pri{background:#FE9F60;color:#fff}.pri:disabled{background:#F3E2CF;color:#C9B6A6;cursor:not-allowed}
+.sec{background:#fff;color:#8A6A52;border:1.5px solid #FFE3C7}
+.danger{background:#C4622E;color:#fff}
+.nav{flex:none;height:64px;background:#fff;border-top:1.5px solid #FFE3C7;display:flex;justify-content:space-around;align-items:center;font-size:12px;font-weight:700;color:#B49A86}
+.nav .on{color:#E8793B}
+.menu{position:absolute;top:50px;right:12px;width:200px;background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(120,70,30,.22);padding:6px;z-index:2}
+.mi{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;font-size:14px;font-weight:700;color:#4A3A30;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.mi:hover,.mi:focus-visible{background:#FFF7ED;outline:none}
+.mi.rp{color:#C4622E}
+.dim{position:absolute;inset:0;background:rgba(58,42,34,.45);z-index:3}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#FFF7ED;border-radius:24px 24px 0 0;padding:20px 20px 24px;z-index:4;display:flex;flex-direction:column;gap:12px}
+.sheet h3{font-size:19px;font-weight:800}.sheet p.s{font-size:13px;color:#8A6A52;line-height:1.5}
+.grab{width:40px;height:4px;border-radius:2px;background:#E3D5C7;margin:-8px auto 4px}
+.opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #FFE3C7;border-radius:14px;padding:13px 14px;font-size:14px;font-weight:700;cursor:pointer}
+.opt input{accent-color:#E8793B;width:18px;height:18px}
+.opt:has(input:checked){border-color:#FE9F60;background:#FFF1E3}
+.help{display:none;background:#FFE9D6;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.5;color:#4A3A30}
+.help b{color:#C4622E}
+.hid{border:2px dashed #E3D5C7;background:#FBF3E9;border-radius:18px;padding:22px 16px;text-align:center;color:#8A6A52;font-size:14px;line-height:1.5}
+.hid svg{stroke:#B49A86;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
+.ok{text-align:center;padding:18px 8px 4px}
+.ok .c{width:64px;height:64px;border-radius:50%;background:#FFE3C7;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.ok .c svg{stroke:#E8793B;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ok h3{font-size:20px;font-weight:800;margin-bottom:6px}.ok p{font-size:13.5px;color:#8A6A52;line-height:1.55}
+.tabs{display:flex;gap:8px;padding:0 20px 14px;flex:none}
+.tabs span{border-radius:16px;padding:7px 16px;font-size:12.5px;font-weight:700;background:#fff;color:#8A6A52;border:1.5px solid #FFE3C7}
+.tabs .on{background:#FE9F60;color:#fff;border-color:#FE9F60}
+.st{display:inline-block;font-size:11.5px;font-weight:800;color:#8A6A52;background:#F3E2CF;border-radius:10px;padding:2px 9px;margin-left:6px}
+.row{display:flex;gap:10px;margin-top:14px}.row .btn{height:42px;font-size:13.5px}
+.empty{text-align:center;color:#8A6A52;font-size:14px;line-height:1.55;padding:60px 20px;display:none}
+.empty b{display:block;font-size:17px;color:#3A2A22;margin-bottom:4px}
+.flag{font-size:12px;color:#B49A86;margin-top:6px}
+button:focus-visible,.opt:focus-within{outline:2px solid #E8793B;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="board">
+
+<!-- 1 -->
+<section class="col"><h2>1. เมนูโพสต์ (Post menu)</h2><span class="cov">Covers: FR-5</span>
+<div class="ph" id="s1">
+  <div class="top"><button class="ic" aria-label="กลับ"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><b>โพสต์</b></div>
+  <div class="body">
+    <div class="card">
+      <div class="who"><div class="av"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/><circle cx="12" cy="8" r="3.5"/></svg></div>
+        <div style="flex:1"><div class="nm">ผู้ใช้ไม่ระบุตัวตน</div><div class="tm">2 ชม.ที่แล้ว</div></div>
+        <button class="ic" aria-label="ตัวเลือกเพิ่มเติม"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button></div>
+      <div class="menu" role="menu">
+        <button class="mi rp" role="menuitem" onclick="go('s2')"><svg width="18" height="18" viewBox="0 0 24 24" style="stroke:#C4622E"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg>รายงานโพสต์</button>
+        <button class="mi" role="menuitem"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>คัดลอกลิงก์</button>
+      </div>
+      <span class="tag">คิดถึงอาหารบ้าน</span>
+      <div class="tx">คืนนี้คิดถึงข้าวที่แม่ทำมากเลย ที่นี่หากินแบบนั้นไม่ได้เลยสักร้าน 🥺</div>
+      <div class="acts"><span class="pill">เข้าใจ 5</span><span class="pill">ความคิดเห็น 3</span></div>
+    </div>
+    <p class="flag">กดที่ “รายงานโพสต์” เพื่อไปหน้าถัดไป</p>
+  </div>
+  <div class="nav"><span class="on">หน้าแรก</span><span>โพสต์</span><span>โปรไฟล์</span></div>
+</div></section>
+
+<!-- 2 -->
+<section class="col"><h2>2. เลือกเหตุผลรายงาน (Report reason)</h2><span class="cov">Covers: FR-5</span>
+<div class="ph" id="s2">
+  <div class="top"><button class="ic" aria-label="กลับ"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><b>โพสต์</b></div>
+  <div class="body"><div class="card"><div class="who"><div class="av"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/><circle cx="12" cy="8" r="3.5"/></svg></div><div><div class="nm">ผู้ใช้ไม่ระบุตัวตน</div><div class="tm">2 ชม.ที่แล้ว</div></div></div><div class="tx" style="margin-top:12px">คืนนี้คิดถึงข้าวที่แม่ทำมากเลย…</div></div></div>
+  <div class="dim"></div>
+  <form class="sheet" onsubmit="event.preventDefault();go('s3')">
+    <div class="grab"></div>
+    <h3>รายงานโพสต์นี้</h3>
+    <p class="s">บอกเราว่าเกิดอะไรขึ้น ผู้ดูแลจะตรวจสอบโพสต์นี้ ผู้เขียนจะไม่ทราบว่าใครรายงาน</p>
+    <label class="opt"><input type="radio" name="r" onchange="pick(this)">คำพูดทำร้ายจิตใจหรือล้อเลียน</label>
+    <label class="opt"><input type="radio" name="r" id="sh" onchange="pick(this)">มีความเสี่ยงที่จะทำร้ายตัวเอง</label>
+    <div class="help" id="help">ถ้าเขาอยู่ในอันตราย โทรสายด่วนสุขภาพจิต <b>1323</b> (24 ชม.) เว็บ KlaiBaan ไม่ใช่บริการฉุกเฉิน</div>
+    <label class="opt"><input type="radio" name="r" onchange="pick(this)">สแปมหรือโฆษณา</label>
+    <label class="opt"><input type="radio" name="r" onchange="pick(this)">อื่น ๆ</label>
+    <button class="btn pri" id="send" disabled>ส่งรายงาน</button>
+    <button type="button" class="btn sec" onclick="go('s1')">ยกเลิก</button>
+  </form>
+</div></section>
+
+<!-- 3 -->
+<section class="col"><h2>3. ยืนยัน + โพสต์ถูกซ่อน (Confirmation + hidden)</h2><span class="cov">Covers: FR-5</span>
+<div class="ph" id="s3">
+  <div class="top"><b>KlaiBaan</b></div>
+  <div class="body">
+    <div class="ok"><div class="c"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div>
+      <h3>ส่งรายงานแล้ว</h3><p>ขอบคุณที่ช่วยดูแลชุมชน ผู้ดูแลจะตรวจสอบโดยเร็ว</p></div>
+    <div class="hid"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 6.1A10 10 0 0112 6c5 0 9 6 9 6a17 17 0 01-3.2 3.7M6.6 6.6C4 8.3 3 12 3 12s4 6 9 6a9 9 0 004.4-1.2"/></svg><br>โพสต์นี้ถูกซ่อนไว้ระหว่างรอผู้ดูแลตรวจสอบ</div>
+    <p class="flag" style="text-align:center">เมื่อมีรายงานครบ 3 ครั้ง โพสต์จะถูกซ่อนจากฟีดสาธารณะทันที</p>
+    <button class="btn pri" onclick="go('s4')" style="margin-top:6px">กลับหน้าแรก</button>
+  </div>
+  <div class="nav"><span class="on">หน้าแรก</span><span>โพสต์</span><span>โปรไฟล์</span></div>
+</div></section>
+
+<!-- 4 -->
+<section class="col"><h2>4. ผู้ดูแล: โพสต์ที่ถูกรายงาน (Moderator queue)</h2><span class="cov">Covers: FR-5</span>
+<div class="ph" id="s4">
+  <div class="top"><b>ผู้ดูแลระบบ</b></div>
+  <div class="tabs"><span class="on" id="cnt">รอตรวจสอบ (2)</span><span>จัดการแล้ว</span></div>
+  <div class="body" id="q">
+    <div class="card" data-c>
+      <div class="who"><div class="av"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/><circle cx="12" cy="8" r="3.5"/></svg></div><div><div class="nm">ผู้ใช้ไม่ระบุตัวตน<span class="st">ซ่อนอยู่</span></div><div class="tm">รายงาน 3 ครั้ง · 2 ชม.ที่แล้ว</div></div></div>
+      <span class="tag">มีความเสี่ยงที่จะทำร้ายตัวเอง</span>
+      <div class="tx">คืนนี้คิดถึงข้าวที่แม่ทำมากเลย…</div>
+      <div class="row"><button class="btn sec" onclick="act(this)">คืนโพสต์</button><button class="btn danger" onclick="act(this)">ลบโพสต์</button></div>
+    </div>
+    <div class="card" data-c>
+      <div class="who"><div class="av"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/><circle cx="12" cy="8" r="3.5"/></svg></div><div><div class="nm">น้องใบไม้<span class="st">ซ่อนอยู่</span></div><div class="tm">รายงาน 3 ครั้ง · 5 ชม.ที่แล้ว</div></div></div>
+      <span class="tag">คำพูดทำร้ายจิตใจหรือล้อเลียน</span>
+      <div class="tx">ความคิดเห็นใต้โพสต์ “ปรับตัวยาก”</div>
+      <div class="row"><button class="btn sec" onclick="act(this)">คืนโพสต์</button><button class="btn danger" onclick="act(this)">ลบโพสต์</button></div>
+    </div>
+    <div class="empty" id="em"><b>ไม่มีโพสต์รอตรวจสอบ</b>เมื่อมีรายงานใหม่ จะแสดงที่นี่</div>
+  </div>
+</div></section>
+
+</div>
+<script>
+var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function go(id){document.getElementById(id).scrollIntoView({behavior:rm?'auto':'smooth',inline:'center',block:'nearest'})}
+function pick(r){document.getElementById('send').disabled=false;document.getElementById('help').style.display=document.getElementById('sh').checked?'block':'none'}
+function act(b){var c=b.closest('[data-c]');c.remove();var n=document.querySelectorAll('[data-c]').length;
+document.getElementById('cnt').textContent='รอตรวจสอบ ('+n+')';if(!n)document.getElementById('em').style.display='block'}
+</script>
+</body>
+</html>
